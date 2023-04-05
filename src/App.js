@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import Tours from "./Tours";
-import Loading from "./loading";
 const url = "https://course-api.com/react-tours-project";
 
 function App() {
@@ -9,11 +8,16 @@ function App() {
 
   const fetchTours = async () => {
     setloading(true);
-    const response = await fetch(url);
-    const tours = await response.json();
-    console.log(tours);
-    setloading(false);
-    settours(tours);
+    try {
+      const response = await fetch(url);
+      const tours = await response.json();
+      console.log(tours);
+      setloading(false);
+      settours(tours);
+    } catch (error) {
+      setloading(false);
+      console.log(error);
+    }
   };
 
   useEffect(() => {
@@ -23,15 +27,13 @@ function App() {
   if (loading) {
     return (
       <main>
-        <h2 className="loading">
-          <Loading />
-        </h2>
+        <h2 className="loading">Loading...</h2>
       </main>
     );
   }
   return (
     <main>
-      <Tours />
+      <Tours tours={tours} />
     </main>
     // <div className="underline"></div>
   );
